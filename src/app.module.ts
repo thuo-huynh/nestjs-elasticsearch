@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ormConfig } from '@database/config/ormconfig';
 import { ConfigModule } from '@nestjs/config';
-import { ProductModule } from '@components/product/product.module';
+import { ormConfig } from './common/database/config/ormconfig';
+import { ProductModule } from './api/product/product.module';
 
 @Module({
   imports: [

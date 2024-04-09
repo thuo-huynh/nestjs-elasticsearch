@@ -1,6 +1,5 @@
 version: '3.7'
 services:
-
   # App service
   # demoapp:
   #   depends_on:
@@ -8,13 +7,13 @@ services:
   #   build:
   #     context: .
   #     dockerfile: Dockerfile
-  #   image: nest-demo-docker
+  #   image: elastic-docker
   #   container_name: demoapp
   #   restart: always
   #   tty: true
   #   ports:
   #     - "${SERVER_PORT}:${SERVER_PORT}"
-  #   working_dir: /var/www/nest-demo
+  #   working_dir: /var/www/elastic
   #   environment:
   #     SERVICE_NAME: demoapp
   #     SERVICE_TAGS: dev
@@ -24,15 +23,13 @@ services:
   #     SERVICE_ES_HOST: ${ELASTIC_SEARCH_HOST}:${ELASTIC_SEARCH_PORT}
   #     ELASTICSEARCH_URL: ${ELASTIC_SEARCH_URL}
   #   volumes:
-  #     - ./:/var/www/nest-demo
-  #     - /var/www/nest-demo/node_modules
-  #   networks:
-  #     - nest-demo-network
+  #     - ./:/var/www/elastic
+  #     - /var/www/elastic/node_modules
 
   # Database service
-  db:
+  database:
     image: mongo
-    container_name: nestmongo
+    container_name: mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_DATABASE: admin
@@ -41,24 +38,22 @@ services:
     volumes:
       - db_data:/data/db
     ports:
-      - "27017:27017"
-    networks:
-      - nest-demo-network
+      - '27017:27017'
 
   # Elastic search service
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     container_name: elasticsearch
     environment:
       - node.name=elasticsearch
       - http.port=9200
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
-      - cluster.name=es-docker-cluster
+      - cluster.name=es-cluster
       - discovery.seed_hosts=elasticsearch
       - cluster.initial_master_nodes=elasticsearch
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -66,14 +61,24 @@ services:
     volumes:
       - es_data:/var/lib/elasticsearch
     ports:
-      - "${ELASTIC_SEARCH_PORT}:${ELASTIC_SEARCH_PORT}"
-    networks:
-      - nest-demo-network
+      - ${ELASTIC_SEARCH_PORT}:${ELASTIC_SEARCH_PORT}
 
-# Docker Networks
-networks:
-  nest-demo-network:
-    driver: bridge
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.12.0
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTIC_SEARCH_URL}
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+
 volumes:
-  db_data: {}
-  es_data: {}
+  db_data:
+  es_data:
+
+networks:
+  elastic-network:
+    driver: bridge

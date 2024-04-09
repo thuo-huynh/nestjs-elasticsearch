@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
 import { ProductRepositoryInterface } from '@components/product/interface/product.repository.interface';
 import { ProductServiceInterface } from '@components/product/interface/product.service.interface';
 import { CreateProductDto } from '@components/product/dto/create-product.dto';
 import { Product } from '@components/product/entity/product.entity';
+import { Inject, Injectable } from '@nestjs/common/decorators';
 // import { ProductSearchObject } from '@components/product/model/product.search.object';
 // import { SearchServiceInterface } from "@services/search/interface/search.service.interface";
 
@@ -10,9 +10,8 @@ import { Product } from '@components/product/entity/product.entity';
 export class ProductService implements ProductServiceInterface {
   constructor(
     @Inject('ProductRepositoryInterface')
-    private readonly productRepository: ProductRepositoryInterface, // @Inject("SearchServiceInterface")
-  ) // private readonly searchService: SearchServiceInterface<any>
-  {}
+    private readonly productRepository: ProductRepositoryInterface, // @Inject("SearchServiceInterface") // private readonly searchService: SearchServiceInterface<any>
+  ) {}
 
   public async create(productDto: CreateProductDto): Promise<Product> {
     const product = new Product();
