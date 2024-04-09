@@ -11,6 +11,26 @@ export class ProductElasticIndex {
     private readonly searchService: ISearchService<any>,
   ) {}
 
+  public async insertProductDocument(product: Product): Promise<any> {
+    const data = this.productDocument(product);
+    return this.searchService.insertIndex(data);
+  }
+
+  public async updateProductDocument(product: Product): Promise<any> {
+    const data = this.productDocument(product);
+    await this.deleteProductDocument(product.id);
+    return this.searchService.insertIndex(data);
+  }
+
+  private async deleteProductDocument(prodId: number): Promise<any> {
+    const data = {
+      index: productIndex._index,
+      type: productIndex._type,
+      id: prodId.toString(),
+    };
+    return this.searchService.deleteDocument(data);
+  }
+
   private bulkIndex(productId: number): any {
     return {
       _index: productIndex._index,

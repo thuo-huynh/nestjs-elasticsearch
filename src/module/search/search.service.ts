@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ConfigSearch } from './config/search.config';
 import { ISearchService } from './interface/search.interface';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class SearchService
@@ -13,6 +13,7 @@ export class SearchService
   }
 
   public async insertIndex(bulkData: any): Promise<any> {
+    console.log('🚀 ~ insertIndex ~ bulkData:', bulkData);
     return this.bulk(bulkData)
       .then((res) => res)
       .catch((err) => {

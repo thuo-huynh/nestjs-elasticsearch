@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ormConfig } from './common/database/config/ormconfig';
 import { ProductModule } from './api/product/product.module';
+import { ObserverModule } from './module/observers/observer.module';
+import { SearchModule } from './module/search/search.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { ProductModule } from './api/product/product.module';
     }),
     TypeOrmModule.forRoot(ormConfig()),
     ProductModule,
+    ObserverModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

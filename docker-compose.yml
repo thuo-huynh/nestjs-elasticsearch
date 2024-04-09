@@ -1,31 +1,5 @@
 version: '3.7'
 services:
-  # App service
-  # demoapp:
-  #   depends_on:
-  #     - db
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   image: elastic-docker
-  #   container_name: demoapp
-  #   restart: always
-  #   tty: true
-  #   ports:
-  #     - "${SERVER_PORT}:${SERVER_PORT}"
-  #   working_dir: /var/www/elastic
-  #   environment:
-  #     SERVICE_NAME: demoapp
-  #     SERVICE_TAGS: dev
-  #     SERVICE_DB_HOST: ${DATABASE_HOST}:${DATABASE_PORT}
-  #     SERVICE_DB_USER: ${DATABASE_USERNAME}
-  #     SERVICE_DB_PASSWORD: ${DATABASE_PASSWORD}
-  #     SERVICE_ES_HOST: ${ELASTIC_SEARCH_HOST}:${ELASTIC_SEARCH_PORT}
-  #     ELASTICSEARCH_URL: ${ELASTIC_SEARCH_URL}
-  #   volumes:
-  #     - ./:/var/www/elastic
-  #     - /var/www/elastic/node_modules
-
   # Database service
   database:
     image: mongo
@@ -39,6 +13,7 @@ services:
       - db_data:/data/db
     ports:
       - '27017:27017'
+    # network_mode: host
 
   # Elastic search service
   elasticsearch:
@@ -62,6 +37,7 @@ services:
       - es_data:/var/lib/elasticsearch
     ports:
       - ${ELASTIC_SEARCH_PORT}:${ELASTIC_SEARCH_PORT}
+    # network_mode: host      
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.12.0
@@ -74,7 +50,8 @@ services:
       - elasticsearch
     links:
       - elasticsearch
-
+    # network_mode: host
+    
 volumes:
   db_data:
   es_data:

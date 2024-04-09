@@ -1,6 +1,6 @@
-import { DeleteResult } from "typeorm";
+import { DeleteResult } from 'typeorm';
 
-export interface BaseInterfaceRepository<T> {
+export interface IBaseRepository<T> {
   create(data: T | any): Promise<T>;
 
   findOneById(id: number): Promise<T>;

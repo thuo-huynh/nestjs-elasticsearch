@@ -1,16 +1,20 @@
-import { ProductRepositoryInterface } from '@components/product/interface/product.repository.interface';
-import { ProductServiceInterface } from '@components/product/interface/product.service.interface';
-import { CreateProductDto } from '@components/product/dto/create-product.dto';
-import { Product } from '@components/product/entity/product.entity';
 import { Inject, Injectable } from '@nestjs/common/decorators';
-// import { ProductSearchObject } from '@components/product/model/product.search.object';
-// import { SearchServiceInterface } from "@services/search/interface/search.service.interface";
+import { ProductRepository } from 'src/api/product/product.repository';
+import { ISearchService } from 'src/module/search/interface/search.interface';
+import { SearchService } from 'src/module/search/search.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { Product } from './entity/product.entity';
+import { IProductRepository } from './interface/product.repository.interface';
+import { IProductService } from './interface/product.service.interface';
+import { ProductSearchObject } from './model/product.search.object';
 
 @Injectable()
-export class ProductService implements ProductServiceInterface {
+export class ProductService implements IProductService {
   constructor(
-    @Inject('ProductRepositoryInterface')
-    private readonly productRepository: ProductRepositoryInterface, // @Inject("SearchServiceInterface") // private readonly searchService: SearchServiceInterface<any>
+    @Inject(ProductRepository)
+    private readonly productRepository: IProductRepository,
+    @Inject(SearchService)
+    private readonly searchService: ISearchService<any>,
   ) {}
 
   public async create(productDto: CreateProductDto): Promise<Product> {
@@ -29,8 +33,8 @@ export class ProductService implements ProductServiceInterface {
     return this.productRepository.create(product);
   }
 
-  // public async search(q: any): Promise<any> {
-  //   const data = ProductSearchObject.searchObject(q);
-  //   return this.searchService.searchIndex(data);
-  // }
+  public async search(q: any): Promise<any> {
+    const data = ProductSearchObject.searchObject(q);
+    return this.searchService.searchIndex(data);
+  }
 }

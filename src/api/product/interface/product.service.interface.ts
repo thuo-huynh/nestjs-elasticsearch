@@ -1,10 +1,10 @@
-import { CreateProductDto } from '@components/product/dto/create-product.dto';
-import { Product } from '@components/product/entity/product.entity';
+import { CreateProductDto } from '../dto/create-product.dto';
+import { Product } from '../entity/product.entity';
 
-export interface ProductServiceInterface {
+export interface IProductService {
   create(productDto: CreateProductDto): Promise<Product>;
 
   update(productId: any, updateProduct: any): Promise<Product>;
 
-  // search(q: any): Promise<any>;
+  search(q: any): Promise<any>;
 }

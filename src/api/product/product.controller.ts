@@ -8,15 +8,16 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ProductServiceInterface } from '@components/product/interface/product.service.interface';
-import { CreateProductDto } from '@components/product/dto/create-product.dto';
-import { Product } from '@components/product/entity/product.entity';
+import { CreateProductDto } from './dto/create-product.dto';
+import { Product } from './entity/product.entity';
+import { IProductService } from './interface/product.service.interface';
+import { ProductService } from './product.service';
 
 @Controller('products')
 export class ProductController {
   constructor(
-    @Inject('ProductServiceInterface')
-    private readonly productService: ProductServiceInterface,
+    @Inject(ProductService)
+    private readonly productService: IProductService,
   ) {}
 
   @Post()
@@ -32,8 +33,8 @@ export class ProductController {
     return this.productService.update(id, updateProduct);
   }
 
-  // @Get('/search')
-  // public async search(@Query() query: any): Promise<any> {
-  //   return this.productService.search(query.q);
-  // }
+  @Get('/search')
+  public async search(@Query() query: any): Promise<any> {
+    return this.productService.search(query.q);
+  }
 }
